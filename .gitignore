@@ -1,0 +1,3 @@
+update.apk
+storage/rate/*
+!storage/rate/.gitkeep

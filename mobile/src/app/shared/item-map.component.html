@@ -1,0 +1,7 @@
+<div
+  #map
+  class="item-map"
+  [attr.role]="selectable() ? 'application' : 'img'"
+  [attr.aria-label]="selectable() ? label() + '. Tap the map or drag the pin to choose a location.' : label()"
+  [style.height.px]="height()"
+></div>

@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text="Back"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ item ? kindLabel(item.kind) + ' item' : 'Item' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="page-wrap">
+    @if (loadError) {
+    <div class="flash flash-error" role="alert">{{ loadError }}</div>
+    } @if (loading) {
+    <p class="status-line" role="status">Loading item…</p>
+    } @if (item) { @if (item.photo_url) {
+    <img class="hero-photo" [src]="item.photo_url" [alt]="'Photo of ' + item.title" />
+    } @else {
+    <div class="photo-fallback">
+      <ion-icon [name]="categoryIcon(item.category)" aria-hidden="true"></ion-icon>
+      <span>No photo provided</span>
+    </div>
+    }
+
+    <div class="detail-head">
+      <div class="tags">
+        <span class="tag" [class.tag-lost]="item.kind === 'lost'" [class.tag-found]="item.kind === 'found'">
+          {{ kindLabel(item.kind) }}
+        </span>
+        <span class="tag">{{ item.category }}</span>
+      </div>
+      <h1 class="item-title">{{ item.title }}</h1>
+      <p class="meta">Posted {{ postedOn(item.created_at) | date: 'MMM d, y · h:mm a' }}</p>
+    </div>
+
+    <p class="section-label">Description</p>
+    <p class="note">{{ item.description }}</p>
+
+    <p class="section-label">{{ item.kind === 'lost' ? 'Last seen' : 'Found at' }}</p>
+    <div class="location-box">
+      <div class="place-row">
+        <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+        <div class="place-copy">
+          <p class="place-name">{{ placeName || 'Pinned location' }}</p>
+          <p class="coords">{{ item.latitude | number: '1.5-5' }}, {{ item.longitude | number: '1.5-5' }}</p>
+        </div>
+        <a
+          class="text-button"
+          [href]="fullMapUrl(item.latitude, item.longitude)"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Full map
+        </a>
+      </div>
+      <app-item-map
+        [latitude]="item.latitude"
+        [longitude]="item.longitude"
+        [height]="240"
+        [label]="item.kind === 'lost' ? 'Map showing where ' + item.title + ' was last seen' : 'Map showing where ' + item.title + ' was found'"
+      ></app-item-map>
+    </div>
+
+    <div class="detail-actions">
+      <ion-button
+        class="cta"
+        expand="block"
+        [href]="directionsUrl(item.latitude, item.longitude)"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <ion-icon slot="start" name="navigate-outline" aria-hidden="true"></ion-icon>
+        Get directions
+      </ion-button>
+    </div>
+    }
+  </div>
+</ion-content>

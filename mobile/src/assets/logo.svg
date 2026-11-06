@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">Campus Lost and Found</title>
+  <defs>
+    <linearGradient id="ring" x1="40" y1="40" x2="190" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2F8FE8"/>
+      <stop offset="0.55" stop-color="#1D5FB8"/>
+      <stop offset="1" stop-color="#0E3F82"/>
+    </linearGradient>
+    <linearGradient id="fold" x1="150" y1="40" x2="220" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFD24A"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+    <mask id="lens-cut">
+      <rect width="256" height="256" fill="#fff"/>
+      <circle cx="160" cy="156" r="27" fill="#000"/>
+    </mask>
+  </defs>
+
+  <path d="M164 46H102A54 54 0 0 0 48 100V156A54 54 0 0 0 102 210H178"
+        fill="none" stroke="url(#ring)" stroke-width="40"/>
+  <path d="M156 46H166A48 48 0 0 1 214 94V112"
+        fill="none" stroke="url(#fold)" stroke-width="40"/>
+
+  <g fill="none" stroke="#1F6FD1" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <g mask="url(#lens-cut)">
+      <path d="M128 92L166 111V149L128 168L90 149V111Z"/>
+      <path d="M90 111L128 130L166 111M128 130V168"/>
+      <path d="M109 101.5L147 120.5"/>
+    </g>
+    <circle cx="160" cy="156" r="15"/>
+    <path d="M171 167L185 181"/>
+  </g>
+</svg>

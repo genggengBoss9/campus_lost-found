@@ -1,0 +1,152 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text="Back"></ion-back-button>
+    </ion-buttons>
+    <ion-title>New report</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="page-wrap">
+    @if (summary.length > 0) {
+    <div #errorSummary class="flash flash-error" role="alert" tabindex="-1">
+      @if (summary.length === 1) {
+      <a [href]="'#' + summary[0].id" (click)="focusField(summary[0].id, $event)">{{ summary[0].message }}</a>
+      } @else {
+      <p id="error-title">There is a problem</p>
+      <ul>
+        @for (entry of summary; track entry.id) {
+        <li>
+          <a [href]="'#' + entry.id" (click)="focusField(entry.id, $event)">{{ entry.message }}</a>
+        </li>
+        }
+      </ul>
+      }
+    </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="post()">
+      <p class="section-label" id="kind-label">What happened?</p>
+      <div class="segmented" role="group" aria-labelledby="kind-label">
+        <button type="button" id="kind" [attr.aria-pressed]="!isLost" (click)="setKind('found')">
+          I found something
+        </button>
+        <button type="button" [attr.aria-pressed]="isLost" (click)="setKind('lost')">I lost something</button>
+      </div>
+      @if (showError('kind')) {
+      <p id="kind-error" class="field-error">{{ messageFor('kind') }}</p>
+      }
+
+      <p class="section-label">Details</p>
+      <ion-input
+        id="title"
+        formControlName="title"
+        label="Item name"
+        labelPlacement="stacked"
+        fill="outline"
+        maxlength="150"
+        placeholder="e.g., Black wallet"
+        helperText="Maximum 150 characters."
+        [errorText]="messageFor('title')"
+        [class.ion-touched]="showError('title')"
+        [class.ion-invalid]="showError('title')"
+        [attr.aria-describedby]="showError('title') ? 'title-error' : null"
+      ></ion-input>
+      <p id="title-error" class="sr-only">{{ messageFor('title') }}</p>
+
+      <ion-select
+        id="category"
+        formControlName="category"
+        label="Category"
+        labelPlacement="stacked"
+        fill="outline"
+        interface="popover"
+        placeholder="Select a category"
+        [class.ion-touched]="showError('category')"
+        [class.ion-invalid]="showError('category')"
+      >
+        @for (category of categories; track category) {
+        <ion-select-option [value]="category">{{ category }}</ion-select-option>
+        }
+      </ion-select>
+      @if (showError('category')) {
+      <p id="category-error" class="field-error">{{ messageFor('category') }}</p>
+      }
+
+      <ion-textarea
+        id="description"
+        formControlName="description"
+        label="Description"
+        labelPlacement="stacked"
+        fill="outline"
+        maxlength="500"
+        [autoGrow]="true"
+        [placeholder]="isLost ? 'Color, brand, and anything that makes it yours' : 'Color, brand, and where exactly you picked it up'"
+        helperText="Maximum 500 characters."
+        [errorText]="messageFor('description')"
+        [class.ion-touched]="showError('description')"
+        [class.ion-invalid]="showError('description')"
+      ></ion-textarea>
+
+      <p class="section-label" id="photo-label">Photo (optional)</p>
+      @if (photoData) {
+      <div class="preview-wrap">
+        <img class="preview" [src]="photoData" alt="Preview of the item photo" />
+        <button type="button" class="preview-remove" (click)="removePhoto()">Remove</button>
+      </div>
+      } @else {
+      <div class="photo-actions">
+        <button type="button" id="photo" class="tile" (click)="takePhoto()" aria-describedby="photo-label">
+          <ion-icon name="camera-outline" aria-hidden="true"></ion-icon>
+          Take photo
+        </button>
+        <button type="button" class="tile" (click)="uploadPhoto()" aria-describedby="photo-label">
+          <ion-icon name="images-outline" aria-hidden="true"></ion-icon>
+          Upload photo
+        </button>
+      </div>
+      <p class="hint">JPG, PNG, or WEBP. Maximum 3MB.</p>
+      } @if (showError('photo_data')) {
+      <p id="photo-error" class="field-error">{{ messageFor('photo_data') }}</p>
+      }
+
+      <p class="section-label" id="location-label">{{ isLost ? 'Where you last saw it' : 'Where you found it' }}</p>
+      <p class="hint">Tap the map to drop a pin, then drag it if you need to adjust it.</p>
+      <div class="location-box" id="location">
+        @if (latitude !== null && longitude !== null) {
+        <div class="place-row">
+          <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+          <div class="place-copy">
+            <p class="place-name">{{ placeName || 'Pinned location' }}</p>
+            <p class="coords">{{ latitude | number: '1.5-5' }}, {{ longitude | number: '1.5-5' }}</p>
+          </div>
+        </div>
+        }
+        <app-item-map
+          [latitude]="latitude"
+          [longitude]="longitude"
+          [selectable]="true"
+          [height]="240"
+          [label]="isLost ? 'Map of where you last saw the item' : 'Map of where you found the item'"
+          (pinned)="pinLocation($event)"
+        ></app-item-map>
+        <div class="location-actions">
+          <button type="button" class="text-button" (click)="useMyLocation()" [disabled]="locating">
+            <ion-icon name="locate-outline" aria-hidden="true"></ion-icon>
+            {{ locating ? 'Finding your location…' : 'Use my current location' }}
+          </button>
+        </div>
+      </div>
+      @if (showError('location')) {
+      <p id="location-error" class="field-error">{{ messageFor('location') }}</p>
+      }
+
+      <div class="submit-bar">
+        <ion-button class="cta" expand="block" type="submit" [disabled]="posting">
+          {{ posting ? 'Posting…' : isLost ? 'Post lost item' : 'Post found item' }}
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

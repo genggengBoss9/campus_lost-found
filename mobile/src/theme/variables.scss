@@ -1,0 +1,56 @@
+:root {
+  --app-background: #f6f7f9;
+  --app-surface: #ffffff;
+  --app-foreground: #0f172a;
+  --app-text: #334155;
+  --app-muted: #5b6678;
+  --app-border: #e4e7ec;
+  --app-subtle: #eef1f5;
+  --app-primary: #1d5fb8;
+  --app-primary-strong: #164a91;
+  --app-primary-soft: #e8f0fb;
+  --app-on-primary: #ffffff;
+  --app-amber: #f59e0b;
+  --app-amber-soft: #fff4dc;
+  --app-amber-text: #8a4b00;
+  --app-radius: 14px;
+  --app-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+
+  --ion-font-family: 'Work Sans', sans-serif;
+  --ion-background-color: var(--app-background);
+  --ion-text-color: var(--app-text);
+  --ion-color-primary: #1d5fb8;
+  --ion-color-primary-rgb: 29, 95, 184;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1a54a2;
+  --ion-color-primary-tint: #346fbf;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --app-background: #0b1220;
+    --app-surface: #131c2e;
+    --app-foreground: #f8fafc;
+    --app-text: #dbe2ec;
+    --app-muted: #a3afc2;
+    --app-border: #243149;
+    --app-subtle: #1b2639;
+    --app-primary: #5ea4f2;
+    --app-primary-strong: #84baf5;
+    --app-primary-soft: #16294a;
+    --app-on-primary: #0b1220;
+    --app-amber-soft: #3a2a0c;
+    --app-amber-text: #fcd34d;
+    --app-shadow: none;
+
+    --ion-background-color: var(--app-background);
+    --ion-text-color: var(--app-text);
+    --ion-color-primary: #5ea4f2;
+    --ion-color-primary-rgb: 94, 164, 242;
+    --ion-color-primary-contrast: #0b1220;
+    --ion-color-primary-contrast-rgb: 11, 18, 32;
+    --ion-color-primary-shade: #5390d5;
+    --ion-color-primary-tint: #6eadf3;
+  }
+}

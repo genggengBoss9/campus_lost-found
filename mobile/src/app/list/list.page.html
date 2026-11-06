@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="brand">
+      <img src="assets/logo.svg" alt="" />
+      <h1 class="brand-name">
+        Campus Lost &amp; Found
+        <span>Report it. Find it.</span>
+      </h1>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="page-wrap with-fab">
+    @if (success) {
+    <div class="flash flash-success" role="status">{{ success }}</div>
+    } @if (loadError) {
+    <div class="flash flash-error" role="alert">
+      <p>{{ loadError }}</p>
+      <ion-button fill="clear" (click)="load()">Try again</ion-button>
+    </div>
+    }
+
+    <label class="search-field">
+      <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
+      <input
+        type="search"
+        placeholder="Search by name or description"
+        [value]="query"
+        (input)="onSearch($event)"
+        aria-label="Search items"
+      />
+    </label>
+
+    <div class="segmented" role="group" aria-label="Show">
+      @for (option of listings; track option) {
+      <button type="button" [attr.aria-pressed]="listing === option" (click)="setListing(option)">{{ option }}</button>
+      }
+    </div>
+
+    <div class="filters" role="group" aria-label="Category">
+      @for (chip of chips; track chip) {
+      <button type="button" class="chip" [attr.aria-pressed]="category === chip" (click)="setCategory(chip)">
+        {{ chip === 'All' ? 'All categories' : chip }}
+      </button>
+      }
+    </div>
+
+    @if (loading) {
+    <p class="status-line" role="status">Loading items…</p>
+    } @else if (!loadError) {
+    <div class="list-head">
+      <h2>Recent posts</h2>
+      <p aria-live="polite">{{ visibleItems.length }} {{ visibleItems.length === 1 ? 'item' : 'items' }}</p>
+    </div>
+
+    @if (items.length === 0) {
+    <div class="empty-state">
+      <img src="assets/logo.svg" alt="" />
+      <h2>Nothing posted yet</h2>
+      <p>No items have been reported yet. Tap Report to post the first one.</p>
+    </div>
+    } @else if (visibleItems.length === 0) {
+    <div class="empty-state">
+      <ion-icon class="empty-icon" name="search-outline" aria-hidden="true"></ion-icon>
+      <h2>No matches</h2>
+      <p>Try another word, or clear the filters.</p>
+    </div>
+    } @else {
+    <div class="item-list">
+      @for (item of visibleItems; track item.id) {
+      <a class="item-row" [routerLink]="['/items', item.id]">
+        @if (item.photo_url) {
+        <img class="thumb" [src]="item.photo_url" alt="" />
+        } @else {
+        <span class="thumb thumb-icon" aria-hidden="true">
+          <ion-icon [name]="categoryIcon(item.category)"></ion-icon>
+        </span>
+        }
+        <span class="row-copy">
+          <span class="row-title">{{ item.title }}</span>
+          <span class="row-meta">
+            <span class="tag" [class.tag-lost]="item.kind === 'lost'" [class.tag-found]="item.kind === 'found'">
+              {{ kindLabel(item.kind) }}
+            </span>
+            {{ item.category }} · {{ postedOn(item.created_at) | date: 'MMM d' }}
+          </span>
+        </span>
+        <ion-icon class="row-chevron" name="chevron-forward" aria-hidden="true"></ion-icon>
+      </a>
+      }
+    </div>
+    } }
+  </div>
+
+  <a class="report-fab" routerLink="/report">
+    <ion-icon name="add" aria-hidden="true"></ion-icon>
+    Report
+  </a>
+</ion-content>
